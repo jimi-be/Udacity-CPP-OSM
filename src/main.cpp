@@ -27,6 +27,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+// function to check user input
 void checkInput(float &n)
 {
     while (n < 0 || n > 100)

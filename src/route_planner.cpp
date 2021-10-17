@@ -41,17 +41,17 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
         i->h_value = CalculateHValue(i);
         open_list.push_back(i);
         i->visited = true;        
-    }
-    
+    }    
 }
 
-bool Compare(const RouteModel::Node*  n1, const RouteModel::Node * n2) {
-    // Compare h+g values of 2 Nodes, true if first is greater than 2nd
-    int f1 = n1->g_value + n1->h_value;
-    int f2 = n2->g_value + n2->h_value;
+// TODO 5 helper function
+// Compare (h+g) values of 2 Nodes, true if first is greater than 2nd
 
-    return f1 > f2;   
-    
+bool Compare(const RouteModel::Node*  n1, const RouteModel::Node * n2) {
+    float f1 = n1->g_value + n1->h_value;
+    float f2 = n2->g_value + n2->h_value;
+
+    return f1 > f2;    
 }
 
 // TODO 5: Complete the NextNode method to sort the open list and return the next node.
@@ -82,8 +82,7 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
 
-    //TODO: Implement your solution here.
-    
+    //TODO: Implement your solution here.    
      while (current_node != start_node)
     {
         distance += current_node->distance(*current_node->parent);
@@ -96,7 +95,6 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
-
 }
 
 
@@ -111,9 +109,9 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
+    start_node->visited = true;
     AddNeighbors(start_node);
-    bool done = false;
-    
+        
     while(open_list.size() > 0)
     {
         current_node = NextNode();
@@ -122,12 +120,8 @@ void RoutePlanner::AStarSearch() {
         {
             m_Model.path = ConstructFinalPath(current_node);
             break;
-            //without break = infinite loop. open_list size never goes to zero??
-            //with break, test fails but program runs and makes a path.
         }
-        else
-        {
-            AddNeighbors(current_node);
-        }
+       
+        AddNeighbors(current_node);
     }
 }
